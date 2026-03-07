@@ -1,6 +1,7 @@
+import { Pressable, StyleSheet, Text, View } from "react-native";
+
 import { Colors } from "@/constants/colors";
 import { Spacing } from "@/constants/spacing";
-import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function PrayScreen() {
   const focus = "Lifegroup";
@@ -8,11 +9,8 @@ export default function PrayScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.greeting}>Good Morning</Text>
-
       <Text style={styles.title}>Today's Prayer Focus</Text>
-
       <Text style={styles.focus}>{focus}</Text>
-
       <Text style={styles.count}>3 requests today</Text>
 
       <Pressable style={styles.button}>
@@ -29,31 +27,26 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: Colors.light.background,
   },
-
   greeting: {
     fontSize: 20,
     marginBottom: Spacing.lg,
     color: Colors.light.text,
   },
-
   title: {
     fontSize: 26,
     fontWeight: "700",
     color: Colors.light.text,
   },
-
   focus: {
     fontSize: 20,
     marginTop: Spacing.sm,
     color: Colors.light.primary,
   },
-
   count: {
     marginTop: Spacing.lg,
     fontSize: 16,
     color: Colors.light.mutedText,
   },
-
   button: {
     marginTop: Spacing.xxxl,
     backgroundColor: Colors.light.primary,
@@ -61,7 +54,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
   },
-
   buttonText: {
     color: "#ffffff",
     fontSize: 18,
