@@ -1,3 +1,5 @@
+import { Colors } from "@/constants/colors";
+import { Spacing } from "@/constants/spacing";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function PrayScreen() {
@@ -23,42 +25,45 @@ export default function PrayScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    padding: Spacing.xl,
     justifyContent: "center",
+    backgroundColor: Colors.light.background,
   },
 
   greeting: {
     fontSize: 20,
-    marginBottom: 20,
+    marginBottom: Spacing.lg,
+    color: Colors.light.text,
   },
 
   title: {
     fontSize: 26,
     fontWeight: "700",
+    color: Colors.light.text,
   },
 
   focus: {
     fontSize: 20,
-    marginTop: 10,
-    color: "#2e7d32",
+    marginTop: Spacing.sm,
+    color: Colors.light.primary,
   },
 
   count: {
-    marginTop: 20,
+    marginTop: Spacing.lg,
     fontSize: 16,
-    color: "#666",
+    color: Colors.light.mutedText,
   },
 
   button: {
-    marginTop: 40,
-    backgroundColor: "#2e7d32",
+    marginTop: Spacing.xxxl,
+    backgroundColor: Colors.light.primary,
     padding: 18,
     borderRadius: 12,
     alignItems: "center",
   },
 
   buttonText: {
-    color: "white",
+    color: "#ffffff",
     fontSize: 18,
     fontWeight: "600",
   },
