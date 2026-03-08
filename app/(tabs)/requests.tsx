@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import {
   FlatList,
   Pressable,
@@ -23,18 +24,24 @@ export default function RequestsScreen() {
   const loadPrayers = async () => {
     if (!user) return;
 
+    setLoading(true);
     const results = await getUserPrayers(user.uid);
     setPrayers(results);
     setLoading(false);
   };
 
-  useEffect(() => {
-    loadPrayers();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadPrayers();
+    }, [user])
+  );
 
   return (
     <View style={styles.container}>
-      <Pressable style={styles.addButton}>
+      <Pressable
+        style={styles.addButton}
+        onPress={() => router.push("/add-prayer")}
+      >
         <Text style={styles.addButtonText}>+ Add Prayer Request</Text>
       </Pressable>
 
@@ -53,9 +60,7 @@ export default function RequestsScreen() {
           </View>
         )}
         ListEmptyComponent={
-          <Text style={styles.empty}>
-            No prayer requests yet
-          </Text>
+          <Text style={styles.empty}>No prayer requests yet</Text>
         }
       />
     </View>
