@@ -4,7 +4,7 @@ import { ActivityIndicator, View } from "react-native";
 import { useAuth } from "@/context/AuthContext";
 
 export default function Index() {
-  const { user, loading } = useAuth();
+  const { user, userProfile, loading } = useAuth();
 
   if (loading) {
     return (
@@ -20,9 +20,13 @@ export default function Index() {
     );
   }
 
-  if (user) {
-    return <Redirect href="/(tabs)/pray" />;
+  if (!user) {
+    return <Redirect href="/(auth)/login" />;
   }
 
-  return <Redirect href="/(auth)/login" />;
+  if (!userProfile?.displayName) {
+    return <Redirect href="/(onboarding)/profile" />;
+  }
+
+  return <Redirect href="/(tabs)/pray" />;
 }

@@ -1,32 +1,51 @@
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useState } from "react";
 import {
-  Alert,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
+    Alert,
+    Pressable,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
 } from "react-native";
 
 import { Colors } from "@/constants/colors";
 import { Spacing } from "@/constants/spacing";
 import { useAuth } from "@/context/AuthContext";
+import { updateUserProfileName } from "@/services/userService";
 
-export default function LoginScreen() {
-  const { login } = useAuth();
+export default function OnboardingProfileScreen() {
+  const { user, refreshUserProfile } = useAuth();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const handleLogin = async () => {
+  const handleContinue = async () => {
+    if (!user) {
+      Alert.alert("No authenticated user found.");
+      return;
+    }
+
+    if (!firstName.trim() || !lastName.trim()) {
+      Alert.alert("Please enter your first and last name.");
+      return;
+    }
+
     try {
       setSubmitting(true);
-      await login(email.trim(), password);
-      router.replace("/");
+
+      await updateUserProfileName({
+        uid: user.uid,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+      });
+
+      await refreshUserProfile();
+
+      router.replace("/(tabs)/pray");
     } catch (error: any) {
-      Alert.alert("Login failed", error.message ?? "Please try again.");
+      Alert.alert("Could not save profile", error.message ?? "Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -34,35 +53,34 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome Back</Text>
-      <Text style={styles.subtitle}>Sign in to continue your prayer journey.</Text>
+      <Text style={styles.title}>Tell us your name</Text>
+      <Text style={styles.subtitle}>
+        This helps your group pray specifically for you.
+      </Text>
 
       <TextInput
         style={styles.input}
-        placeholder="Email"
-        autoCapitalize="none"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
+        placeholder="First name"
+        value={firstName}
+        onChangeText={setFirstName}
       />
 
       <TextInput
         style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
+        placeholder="Last name"
+        value={lastName}
+        onChangeText={setLastName}
       />
 
-      <Pressable style={styles.button} onPress={handleLogin} disabled={submitting}>
+      <Pressable
+        style={styles.button}
+        onPress={handleContinue}
+        disabled={submitting}
+      >
         <Text style={styles.buttonText}>
-          {submitting ? "Signing In..." : "Sign In"}
+          {submitting ? "Saving..." : "Continue"}
         </Text>
       </Pressable>
-
-      <Link href="/(auth)/signup" style={styles.link}>
-        Create an account
-      </Link>
     </View>
   );
 }
@@ -104,11 +122,5 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "600",
-  },
-  link: {
-    marginTop: Spacing.xl,
-    color: Colors.light.primary,
-    textAlign: "center",
-    fontSize: 16,
   },
 });

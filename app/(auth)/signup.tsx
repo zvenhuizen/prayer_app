@@ -1,12 +1,12 @@
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import {
-    Alert,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 
 import { Colors } from "@/constants/colors";
@@ -30,7 +30,7 @@ export default function SignupScreen() {
     try {
       setSubmitting(true);
       await signup(email.trim(), password);
-      router.replace("/(tabs)/pray");
+      router.replace("/");
     } catch (error: any) {
       Alert.alert("Signup failed", error.message ?? "Please try again.");
     } finally {
