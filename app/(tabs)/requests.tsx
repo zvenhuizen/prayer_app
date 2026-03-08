@@ -1,10 +1,63 @@
-import { StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+
+import { useAuth } from "@/context/AuthContext";
+import { getUserPrayers } from "@/services/prayerService";
+import { Prayer } from "@/types/Prayer";
+
+import { Colors } from "@/constants/colors";
+import { Spacing } from "@/constants/spacing";
 
 export default function RequestsScreen() {
+  const { user } = useAuth();
+
+  const [prayers, setPrayers] = useState<Prayer[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const loadPrayers = async () => {
+    if (!user) return;
+
+    const results = await getUserPrayers(user.uid);
+    setPrayers(results);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadPrayers();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Requests</Text>
-      <Text style={styles.subtitle}>Manage personal and shared prayer requests.</Text>
+      <Pressable style={styles.addButton}>
+        <Text style={styles.addButtonText}>+ Add Prayer Request</Text>
+      </Pressable>
+
+      <FlatList
+        data={prayers}
+        keyExtractor={(item) => item.id}
+        refreshing={loading}
+        onRefresh={loadPrayers}
+        renderItem={({ item }) => (
+          <View style={styles.card}>
+            <Text style={styles.title}>{item.title}</Text>
+
+            {item.description ? (
+              <Text style={styles.description}>{item.description}</Text>
+            ) : null}
+          </View>
+        )}
+        ListEmptyComponent={
+          <Text style={styles.empty}>
+            No prayer requests yet
+          </Text>
+        }
+      />
     </View>
   );
 }
@@ -12,18 +65,44 @@ export default function RequestsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 24,
+    padding: Spacing.lg,
+    backgroundColor: Colors.light.background,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: "700",
+
+  addButton: {
+    backgroundColor: Colors.light.primary,
+    padding: Spacing.lg,
+    borderRadius: 10,
+    marginBottom: Spacing.lg,
   },
-  subtitle: {
-    marginTop: 12,
-    fontSize: 16,
-    color: "#666",
+
+  addButtonText: {
+    color: "#fff",
+    fontWeight: "600",
     textAlign: "center",
+  },
+
+  card: {
+    backgroundColor: Colors.light.card,
+    borderRadius: 10,
+    padding: Spacing.lg,
+    marginBottom: Spacing.md,
+  },
+
+  title: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: Colors.light.text,
+  },
+
+  description: {
+    marginTop: Spacing.sm,
+    color: Colors.light.mutedText,
+  },
+
+  empty: {
+    textAlign: "center",
+    marginTop: 40,
+    color: Colors.light.mutedText,
   },
 });
