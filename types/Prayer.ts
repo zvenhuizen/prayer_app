@@ -10,4 +10,5 @@ export type Prayer = {
   updatedAt: any;
 
   isAnswered: boolean;
+  answeredAt?: any | null;
 };

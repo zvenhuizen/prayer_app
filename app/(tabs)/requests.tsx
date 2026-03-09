@@ -51,13 +51,25 @@ export default function RequestsScreen() {
         refreshing={loading}
         onRefresh={loadPrayers}
         renderItem={({ item }) => (
-          <View style={styles.card}>
+          <Pressable
+            style={styles.card}
+            onPress={() =>
+              router.push({
+                pathname: "/prayer/[id]",
+                params: { id: item.id },
+              })
+            }
+          >
             <Text style={styles.title}>{item.title}</Text>
 
             {item.description ? (
               <Text style={styles.description}>{item.description}</Text>
             ) : null}
-          </View>
+
+            <Text style={styles.meta}>
+              {item.isAnswered ? "Answered" : "Active"}
+            </Text>
+          </Pressable>
         )}
         ListEmptyComponent={
           <Text style={styles.empty}>No prayer requests yet</Text>
@@ -108,6 +120,12 @@ const styles = StyleSheet.create({
   empty: {
     textAlign: "center",
     marginTop: 40,
+    color: Colors.light.mutedText,
+  },
+
+  meta: {
+    marginTop: Spacing.sm,
+    fontSize: 13,
     color: Colors.light.mutedText,
   },
 });
