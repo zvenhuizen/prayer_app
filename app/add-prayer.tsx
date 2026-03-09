@@ -1,14 +1,14 @@
 import { router } from "expo-router";
 import { useState } from "react";
 import {
-    Alert,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
 } from "react-native";
 
+import ScreenContainer from "@/components/ScreenContainer";
 import { Colors } from "@/constants/colors";
 import { Spacing } from "@/constants/spacing";
 import { useAuth } from "@/context/AuthContext";
@@ -51,7 +51,7 @@ export default function AddPrayerScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer scroll keyboard>
       <Text style={styles.title}>Add Prayer Request</Text>
       <Text style={styles.subtitle}>What would you like to pray for?</Text>
 
@@ -80,22 +80,17 @@ export default function AddPrayerScreen() {
           {submitting ? "Saving..." : "Save Prayer"}
         </Text>
       </Pressable>
-    </View>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: Spacing.xl,
-    justifyContent: "center",
-    backgroundColor: Colors.light.background,
-  },
   title: {
     fontSize: 32,
     fontWeight: "700",
     color: Colors.light.text,
     marginBottom: Spacing.sm,
+    marginTop: Spacing.xxxl,
   },
   subtitle: {
     fontSize: 16,

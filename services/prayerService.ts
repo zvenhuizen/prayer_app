@@ -107,3 +107,18 @@ export async function getPrayerUpdates(prayerId: string): Promise<PrayerUpdate[]
     ...doc.data(),
   })) as PrayerUpdate[];
 }
+
+export async function getActiveUserPrayers(uid: string): Promise<Prayer[]> {
+  const q = query(
+    collection(db, "prayers"),
+    where("ownerId", "==", uid),
+    where("isAnswered", "==", false)
+  );
+
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Prayer[];
+}

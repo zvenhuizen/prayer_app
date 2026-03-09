@@ -1,59 +1,83 @@
-import { router } from "expo-router";
+import ScreenContainer from "@/components/ScreenContainer";
+import { useAuth } from "@/context/AuthContext";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { Colors } from "@/constants/colors";
 import { Spacing } from "@/constants/spacing";
-import { useAuth } from "@/context/AuthContext";
 
 export default function ProfileScreen() {
-  const { user, logout } = useAuth();
+  const { user, userProfile, logout } = useAuth();
 
   const handleLogout = async () => {
     try {
       await logout();
-      router.replace("/(auth)/login");
     } catch (error: any) {
       Alert.alert("Logout failed", error.message ?? "Please try again.");
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Profile</Text>
-      <Text style={styles.email}>{user?.email ?? "No email found"}</Text>
+    <ScreenContainer>
+      <View style={styles.header}>
+        <Text style={styles.title}>Profile</Text>
+      </View>
 
-      <Pressable style={styles.button} onPress={handleLogout}>
-        <Text style={styles.buttonText}>Log Out</Text>
+      <View style={styles.card}>
+        <Text style={styles.label}>Name</Text>
+        <Text style={styles.value}>
+          {userProfile?.displayName ?? "Not set"}
+        </Text>
+
+        <Text style={styles.label}>Email</Text>
+        <Text style={styles.value}>{user?.email}</Text>
+      </View>
+
+      <Pressable style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutText}>Log Out</Text>
       </Pressable>
-    </View>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: Spacing.xl,
-    backgroundColor: Colors.light.background,
+  header: {
+    marginBottom: Spacing.xl,
   },
+
   title: {
     fontSize: 32,
     fontWeight: "700",
     color: Colors.light.text,
-    marginBottom: Spacing.md,
   },
-  email: {
-    fontSize: 16,
-    color: Colors.light.mutedText,
+
+  card: {
+    backgroundColor: Colors.light.card,
+    borderRadius: 12,
+    padding: Spacing.xl,
     marginBottom: Spacing.xl,
   },
-  button: {
-    backgroundColor: Colors.light.primary,
+
+  label: {
+    fontSize: 13,
+    color: Colors.light.mutedText,
+    marginTop: Spacing.md,
+  },
+
+  value: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: Colors.light.text,
+    marginTop: Spacing.xs,
+  },
+
+  logoutButton: {
+    backgroundColor: "#ef4444",
     padding: Spacing.lg,
     borderRadius: 10,
     alignItems: "center",
   },
-  buttonText: {
+
+  logoutText: {
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "600",

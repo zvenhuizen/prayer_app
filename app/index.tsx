@@ -25,7 +25,7 @@ export default function Index() {
   }
 
   if (!userProfile?.displayName) {
-    return <Redirect href="/(onboarding)/profile" />;
+    return <Redirect href="/(onboarding)/name" />;
   }
 
   return <Redirect href="/(tabs)/pray" />;

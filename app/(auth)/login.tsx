@@ -6,9 +6,9 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View,
 } from "react-native";
 
+import ScreenContainer from "@/components/ScreenContainer";
 import { Colors } from "@/constants/colors";
 import { Spacing } from "@/constants/spacing";
 import { useAuth } from "@/context/AuthContext";
@@ -33,7 +33,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer scroll keyboard>
       <Text style={styles.title}>Welcome Back</Text>
       <Text style={styles.subtitle}>Sign in to continue your prayer journey.</Text>
 
@@ -63,22 +63,17 @@ export default function LoginScreen() {
       <Link href="/(auth)/signup" style={styles.link}>
         Create an account
       </Link>
-    </View>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: Spacing.xl,
-    backgroundColor: Colors.light.background,
-  },
   title: {
     fontSize: 32,
     fontWeight: "700",
     color: Colors.light.text,
     marginBottom: Spacing.sm,
+    marginTop: Spacing.xxxl,
   },
   subtitle: {
     fontSize: 16,
@@ -92,6 +87,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: Spacing.lg,
     marginBottom: Spacing.lg,
+    color: Colors.light.text,
   },
   button: {
     backgroundColor: Colors.light.primary,
