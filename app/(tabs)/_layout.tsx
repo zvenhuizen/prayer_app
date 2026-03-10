@@ -1,23 +1,27 @@
-import { useAuth } from "@/context/AuthContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
 import React from "react";
 
+import { useAuth } from "@/context/AuthContext";
+
 export default function TabsLayout() {
   const { user, userProfile, loading } = useAuth();
 
+  // Wait until auth state loads
   if (loading) {
     return null;
   }
 
+  // If not logged in → go to login
   if (!user) {
     return <Redirect href="/(auth)/login" />;
   }
 
+  // If user has not finished onboarding
   if (!userProfile?.displayName) {
     return <Redirect href="/(onboarding)/name" />;
   }
-  
+
   return (
     <Tabs
       screenOptions={{
