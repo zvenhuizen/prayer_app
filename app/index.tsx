@@ -1,23 +1,12 @@
-import { Redirect } from "expo-router";
-import { ActivityIndicator, View } from "react-native";
-
+import LoadingScreen from "@/components/LoadingScreen";
 import { useAuth } from "@/context/AuthContext";
+import { Redirect } from "expo-router";
 
 export default function Index() {
   const { user, userProfile, loading } = useAuth();
 
   if (loading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return <LoadingScreen />;
   }
 
   if (!user) {

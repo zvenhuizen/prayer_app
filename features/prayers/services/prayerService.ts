@@ -11,9 +11,9 @@ import {
   where,
 } from "firebase/firestore";
 
+import { Prayer } from "@/features/prayers/types/Prayer";
+import { PrayerUpdate } from "@/features/prayers/types/PrayerUpdate";
 import { db } from "@/services/firebase";
-import { Prayer } from "@/types/Prayer";
-import { PrayerUpdate } from "@/types/PrayerUpdate";
 
 export async function createPrayer(params: {
   ownerId: string;
@@ -37,6 +37,20 @@ export async function createPrayer(params: {
 
 export async function getUserPrayers(uid: string): Promise<Prayer[]> {
   const q = query(collection(db, "prayers"), where("ownerId", "==", uid));
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Prayer[];
+}
+
+export async function getActiveUserPrayers(uid: string): Promise<Prayer[]> {
+  const q = query(
+    collection(db, "prayers"),
+    where("ownerId", "==", uid),
+    where("isAnswered", "==", false)
+  );
 
   const snapshot = await getDocs(q);
 
@@ -106,19 +120,4 @@ export async function getPrayerUpdates(prayerId: string): Promise<PrayerUpdate[]
     id: doc.id,
     ...doc.data(),
   })) as PrayerUpdate[];
-}
-
-export async function getActiveUserPrayers(uid: string): Promise<Prayer[]> {
-  const q = query(
-    collection(db, "prayers"),
-    where("ownerId", "==", uid),
-    where("isAnswered", "==", false)
-  );
-
-  const snapshot = await getDocs(q);
-
-  return snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Prayer[];
 }

@@ -1,18 +1,18 @@
 import { router } from "expo-router";
 import { useState } from "react";
 import {
-  Alert,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
+    Alert,
+    Pressable,
+    StyleSheet,
+    Text,
+    TextInput,
 } from "react-native";
 
 import ScreenContainer from "@/components/ScreenContainer";
 import { Colors } from "@/constants/colors";
 import { Spacing } from "@/constants/spacing";
 import { useAuth } from "@/context/AuthContext";
-import { createPrayer } from "@/services/prayerService";
+import { createPrayer } from "@/features/prayers/services/prayerService";
 
 export default function AddPrayerScreen() {
   const { user, userProfile } = useAuth();

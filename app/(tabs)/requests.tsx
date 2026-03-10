@@ -1,16 +1,16 @@
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
+    FlatList,
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
 } from "react-native";
 
 import { useAuth } from "@/context/AuthContext";
-import { getUserPrayers } from "@/services/prayerService";
-import { Prayer } from "@/types/Prayer";
+import { getUserPrayers } from "@/features/prayers/services/prayerService";
+import { Prayer } from "@/features/prayers/types/Prayer";
 
 import { Colors } from "@/constants/colors";
 import { Spacing } from "@/constants/spacing";

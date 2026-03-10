@@ -4,8 +4,8 @@ import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 import ScreenContainer from "@/components/ScreenContainer";
 import { useAuth } from "@/context/AuthContext";
-import { getActiveUserPrayers } from "@/services/prayerService";
-import { Prayer } from "@/types/Prayer";
+import { getActiveUserPrayers } from "@/features/prayers/services/prayerService";
+import { Prayer } from "@/features/prayers/types/Prayer";
 
 import { Colors } from "@/constants/colors";
 import { Spacing } from "@/constants/spacing";

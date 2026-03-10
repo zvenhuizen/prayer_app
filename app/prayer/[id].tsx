@@ -1,24 +1,24 @@
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
 import {
-  Alert,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
+    Alert,
+    FlatList,
+    Pressable,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
 } from "react-native";
 
 import { useAuth } from "@/context/AuthContext";
 import {
-  addPrayerUpdate,
-  getPrayerById,
-  getPrayerUpdates,
-  markPrayerAnswered,
-} from "@/services/prayerService";
-import { Prayer } from "@/types/Prayer";
-import { PrayerUpdate } from "@/types/PrayerUpdate";
+    addPrayerUpdate,
+    getPrayerById,
+    getPrayerUpdates,
+    markPrayerAnswered,
+} from "@/features/prayers/services/prayerService";
+import { Prayer } from "@/features/prayers/types/Prayer";
+import { PrayerUpdate } from "@/features/prayers/types/PrayerUpdate";
 
 import { Colors } from "@/constants/colors";
 import { Spacing } from "@/constants/spacing";
