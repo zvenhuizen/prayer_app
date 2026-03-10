@@ -1,21 +1,21 @@
-import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
 import {
-    Alert,
-    FlatList,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  Alert,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 
 import { useAuth } from "@/context/AuthContext";
 import {
-    addPrayerUpdate,
-    getPrayerById,
-    getPrayerUpdates,
-    markPrayerAnswered,
+  addPrayerUpdate,
+  getPrayerById,
+  getPrayerUpdates,
+  markPrayerAnswered,
 } from "@/features/prayers/services/prayerService";
 import { Prayer } from "@/features/prayers/types/Prayer";
 import { PrayerUpdate } from "@/features/prayers/types/PrayerUpdate";
@@ -118,73 +118,82 @@ export default function PrayerDetailScreen() {
   }
 
   return (
-    <ScreenContainer>
-      <FlatList
-        style={styles.list}
-        contentContainerStyle={styles.content}
-        data={updates}
-        keyExtractor={(item) => item.id}
-        ListHeaderComponent={
-          <>
-            <Text style={styles.title}>{prayer.title}</Text>
+    <>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          title: "Prayer Details",
+        }}
+      />
 
-            <Text style={styles.meta}>Requested by {prayer.ownerName}</Text>
+      <ScreenContainer>
+        <FlatList
+          style={styles.list}
+          contentContainerStyle={styles.content}
+          data={updates}
+          keyExtractor={(item) => item.id}
+          ListHeaderComponent={
+            <>
+              <Text style={styles.title}>{prayer.title}</Text>
 
-            {prayer.description ? (
-              <Text style={styles.description}>{prayer.description}</Text>
-            ) : null}
+              <Text style={styles.meta}>Requested by {prayer.ownerName}</Text>
 
-            <View style={styles.statusRow}>
-              <Text style={styles.status}>
-                Status: {prayer.isAnswered ? "Answered" : "Active"}
-              </Text>
-            </View>
+              {prayer.description ? (
+                <Text style={styles.description}>{prayer.description}</Text>
+              ) : null}
 
-            {!prayer.isAnswered ? (
+              <View style={styles.statusRow}>
+                <Text style={styles.status}>
+                  Status: {prayer.isAnswered ? "Answered" : "Active"}
+                </Text>
+              </View>
+
+              {!prayer.isAnswered ? (
+                <Pressable
+                  style={styles.actionButton}
+                  onPress={handleMarkAnswered}
+                  disabled={markingAnswered}
+                >
+                  <Text style={styles.actionButtonText}>
+                    {markingAnswered ? "Marking..." : "Mark Answered"}
+                  </Text>
+                </Pressable>
+              ) : null}
+
+              <Text style={styles.sectionTitle}>Add Update</Text>
+
+              <TextInput
+                style={[styles.input, styles.textArea]}
+                placeholder="Share an update..."
+                multiline
+                textAlignVertical="top"
+                value={newUpdate}
+                onChangeText={setNewUpdate}
+              />
+
               <Pressable
                 style={styles.actionButton}
-                onPress={handleMarkAnswered}
-                disabled={markingAnswered}
+                onPress={handleAddUpdate}
+                disabled={submittingUpdate}
               >
                 <Text style={styles.actionButtonText}>
-                  {markingAnswered ? "Marking..." : "Mark Answered"}
+                  {submittingUpdate ? "Saving..." : "Save Update"}
                 </Text>
               </Pressable>
-            ) : null}
 
-            <Text style={styles.sectionTitle}>Add Update</Text>
-
-            <TextInput
-              style={[styles.input, styles.textArea]}
-              placeholder="Share an update..."
-              multiline
-              textAlignVertical="top"
-              value={newUpdate}
-              onChangeText={setNewUpdate}
-            />
-
-            <Pressable
-              style={styles.actionButton}
-              onPress={handleAddUpdate}
-              disabled={submittingUpdate}
-            >
-              <Text style={styles.actionButtonText}>
-                {submittingUpdate ? "Saving..." : "Save Update"}
-              </Text>
-            </Pressable>
-
-            <Text style={styles.sectionTitle}>Updates</Text>
-          </>
-        }
-        renderItem={({ item }) => (
-          <View style={styles.updateCard}>
-            <Text style={styles.updateAuthor}>{item.authorName}</Text>
-            <Text style={styles.updateMessage}>{item.message}</Text>
-          </View>
-        )}
-        ListEmptyComponent={<Text style={styles.emptyText}>No updates yet.</Text>}
-      />
-    </ScreenContainer>
+              <Text style={styles.sectionTitle}>Updates</Text>
+            </>
+          }
+          renderItem={({ item }) => (
+            <View style={styles.updateCard}>
+              <Text style={styles.updateAuthor}>{item.authorName}</Text>
+              <Text style={styles.updateMessage}>{item.message}</Text>
+            </View>
+          )}
+          ListEmptyComponent={<Text style={styles.emptyText}>No updates yet.</Text>}
+        />
+      </ScreenContainer>
+    </>
   );
 }
 
