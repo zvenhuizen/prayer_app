@@ -64,7 +64,6 @@ export async function getGroupsByIds(groupIds: string[]): Promise<Group[]> {
 
   const groups: Group[] = [];
 
-  // Firestore where(documentId(), "in", ...) supports up to 10 values at a time
   for (let i = 0; i < groupIds.length; i += 10) {
     const chunk = groupIds.slice(i, i + 10);
 
@@ -94,4 +93,53 @@ export async function getUserGroups(uid: string): Promise<Group[]> {
   }
 
   return await getGroupsByIds(groupIds);
+}
+
+export async function joinGroupByCode(params: {
+  joinCode: string;
+  userId: string;
+  displayName: string;
+}) {
+  const { joinCode, userId, displayName } = params;
+
+  const normalizedCode = joinCode.trim().toUpperCase();
+
+  const groupQuery = query(
+    collection(db, "groups"),
+    where("joinCode", "==", normalizedCode)
+  );
+
+  const groupSnapshot = await getDocs(groupQuery);
+
+  if (groupSnapshot.empty) {
+    throw new Error("No group found with that join code.");
+  }
+
+  const groupDoc = groupSnapshot.docs[0];
+  const groupId = groupDoc.id;
+
+  const existingMembershipQuery = query(
+    collection(db, "groupMembers"),
+    where("groupId", "==", groupId),
+    where("userId", "==", userId)
+  );
+
+  const existingMembershipSnapshot = await getDocs(existingMembershipQuery);
+
+  if (!existingMembershipSnapshot.empty) {
+    throw new Error("You are already a member of this group.");
+  }
+
+  await addDoc(collection(db, "groupMembers"), {
+    groupId,
+    userId,
+    displayName,
+    role: "member",
+    joinedAt: serverTimestamp(),
+  });
+
+  return {
+    groupId,
+    groupName: groupDoc.data().name as string,
+  };
 }

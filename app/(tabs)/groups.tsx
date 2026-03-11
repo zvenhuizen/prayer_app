@@ -48,7 +48,10 @@ export default function GroupsScreen() {
               <Text style={styles.buttonText}>Create Group</Text>
             </Pressable>
 
-            <Pressable style={styles.button}>
+            <Pressable
+              style={styles.button}
+              onPress={() => router.push("/join-group")}
+            >
               <Text style={styles.buttonText}>Join Group</Text>
             </Pressable>
 
