@@ -1,29 +1,44 @@
-import { StyleSheet, Text, View } from "react-native";
+import ScreenContainer from "@/components/ScreenContainer"
+import { Pressable, StyleSheet, Text } from "react-native"
+
+import { Colors } from "@/constants/colors"
+import { Spacing } from "@/constants/spacing"
 
 export default function GroupsScreen() {
   return (
-    <View style={styles.container}>
+    <ScreenContainer>
       <Text style={styles.title}>Groups</Text>
-      <Text style={styles.subtitle}>View and manage your prayer groups.</Text>
-    </View>
-  );
+
+      <Pressable style={styles.button}>
+        <Text style={styles.buttonText}>Create Group</Text>
+      </Pressable>
+
+      <Pressable style={styles.button}>
+        <Text style={styles.buttonText}>Join Group</Text>
+      </Pressable>
+    </ScreenContainer>
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 24,
-  },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "700",
+    color: Colors.light.text,
+    marginBottom: Spacing.xl,
   },
-  subtitle: {
-    marginTop: 12,
+
+  button: {
+    backgroundColor: Colors.light.primary,
+    padding: Spacing.lg,
+    borderRadius: 12,
+    alignItems: "center",
+    marginBottom: Spacing.md,
+  },
+
+  buttonText: {
+    color: "#ffffff",
     fontSize: 16,
-    color: "#666",
-    textAlign: "center",
+    fontWeight: "600",
   },
-});
+})
