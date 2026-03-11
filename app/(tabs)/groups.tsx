@@ -1,15 +1,19 @@
-import ScreenContainer from "@/components/ScreenContainer"
-import { Pressable, StyleSheet, Text } from "react-native"
+import { router } from "expo-router";
+import { Pressable, StyleSheet, Text } from "react-native";
 
-import { Colors } from "@/constants/colors"
-import { Spacing } from "@/constants/spacing"
+import ScreenContainer from "@/components/ScreenContainer";
+import { Colors } from "@/constants/colors";
+import { Spacing } from "@/constants/spacing";
 
 export default function GroupsScreen() {
   return (
     <ScreenContainer>
       <Text style={styles.title}>Groups</Text>
 
-      <Pressable style={styles.button}>
+      <Pressable
+        style={styles.button}
+        onPress={() => router.push("/create-group")}
+      >
         <Text style={styles.buttonText}>Create Group</Text>
       </Pressable>
 
@@ -17,7 +21,7 @@ export default function GroupsScreen() {
         <Text style={styles.buttonText}>Join Group</Text>
       </Pressable>
     </ScreenContainer>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -41,4 +45,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-})
+});
