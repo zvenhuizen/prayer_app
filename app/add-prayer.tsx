@@ -1,18 +1,21 @@
 import { router } from "expo-router";
 import { useState } from "react";
 import {
-    Alert,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
 } from "react-native";
 
 import ScreenContainer from "@/components/ScreenContainer";
 import { Colors } from "@/constants/colors";
 import { Spacing } from "@/constants/spacing";
 import { useAuth } from "@/context/AuthContext";
+import { getUserGroups } from "@/features/groups/services/groupService";
+import { Group } from "@/features/groups/types/Group";
 import { createPrayer } from "@/features/prayers/services/prayerService";
+import { useEffect } from "react";
 
 export default function AddPrayerScreen() {
   const { user, userProfile } = useAuth();
@@ -37,10 +40,11 @@ export default function AddPrayerScreen() {
 
       await createPrayer({
         ownerId: user.uid,
-        ownerName: userProfile?.displayName ?? user.email ?? "Unknown User",
-        title: title.trim(),
-        description: description.trim(),
-      });
+        ownerName: userProfile?.displayName ?? "",
+        title,
+        description,
+        groupIds: selectedGroups,
+      })
 
       router.back();
     } catch (error: any) {
@@ -49,6 +53,19 @@ export default function AddPrayerScreen() {
       setSubmitting(false);
     }
   };
+
+  const [groups, setGroups] = useState<Group[]>([])
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([])
+
+  useEffect(() => {
+    async function loadGroups() {
+      if (!user) return
+      const results = await getUserGroups(user.uid)
+      setGroups(results)
+    }
+
+    loadGroups()
+  }, [user]);
 
   return (
     <ScreenContainer scroll keyboard>
@@ -70,6 +87,32 @@ export default function AddPrayerScreen() {
         value={description}
         onChangeText={setDescription}
       />
+
+      <Text style={styles.sectionTitle}>Share with groups</Text>
+
+      {groups.map((group) => {
+        const selected = selectedGroups.includes(group.id)
+
+        return (
+          <Pressable
+            key={group.id}
+            style={styles.groupRow}
+            onPress={() => {
+              if (selected) {
+                setSelectedGroups(selectedGroups.filter((id) => id !== group.id))
+              } else {
+                setSelectedGroups([...selectedGroups, group.id])
+              }
+            }}
+          >
+            <Text style={styles.groupName}>{group.name}</Text>
+
+            <Text style={styles.checkbox}>
+              {selected ? "☑" : "☐"}
+            </Text>
+          </Pressable>
+        )
+      })}
 
       <Pressable
         style={styles.button}
@@ -120,5 +163,28 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "600",
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginTop: Spacing.xl,
+    marginBottom: Spacing.md,
+    color: Colors.light.text,
+  },
+
+  groupRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: Spacing.md,
+  },
+
+  groupName: {
+    fontSize: 16,
+    color: Colors.light.text,
+  },
+
+  checkbox: {
+    fontSize: 18,
   },
 });

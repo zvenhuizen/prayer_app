@@ -14,16 +14,22 @@ import {
 import { Prayer } from "@/features/prayers/types/Prayer";
 import { PrayerUpdate } from "@/features/prayers/types/PrayerUpdate";
 import { db } from "@/services/firebase";
+import { writeBatch } from "firebase/firestore";
 
 export async function createPrayer(params: {
-  ownerId: string;
-  ownerName: string;
-  title: string;
-  description?: string;
+  ownerId: string
+  ownerName: string
+  title: string
+  description?: string
+  groupIds?: string[]
 }) {
-  const { ownerId, ownerName, title, description } = params;
+  const { ownerId, ownerName, title, description, groupIds } = params
 
-  await addDoc(collection(db, "prayers"), {
+  const prayerRef = doc(collection(db, "prayers"))
+
+  const batch = writeBatch(db)
+
+  batch.set(prayerRef, {
     ownerId,
     ownerName,
     title,
@@ -32,7 +38,22 @@ export async function createPrayer(params: {
     answeredAt: null,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
-  });
+  })
+
+  if (groupIds && groupIds.length > 0) {
+    groupIds.forEach((groupId) => {
+      const linkRef = doc(collection(db, "groupPrayers"))
+
+      batch.set(linkRef, {
+        groupId,
+        prayerId: prayerRef.id,
+        ownerId,
+        sharedAt: serverTimestamp(),
+      })
+    })
+  }
+
+  await batch.commit()
 }
 
 export async function getUserPrayers(uid: string): Promise<Prayer[]> {
